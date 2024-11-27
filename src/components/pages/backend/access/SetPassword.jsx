@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DiningOption = () => {
+const SetPassword = () => {
   return (
     <div>
       
@@ -8,5 +8,4 @@ const DiningOption = () => {
   )
 }
 
-export default DiningOption
-
+export default SetPassword
