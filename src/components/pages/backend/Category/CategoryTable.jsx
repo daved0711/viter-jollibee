@@ -3,13 +3,14 @@ import IconServerError from '../partials/IconServerError'
 import TableLoader from '../partials/TableLoader'
 import LoadMore from '../partials/LoadMore'
 import Pills from '../partials/Pills'
-import { Archive, ArchiveRestore, FilePenLine, Trash2 } from 'lucide-react'
+
 import IconNoData from '../partials/IconNoData'
 import SpinnerTable from '../partials/spinners/SpinnerTable'
 import { StoreContext } from '@/components/Store/storeContext'
 import { setIsAdd, setIsConfirm, setIsDelete } from '@/components/Store/storeAction'
 import ModalDelete from '../partials/modals/ModalDelete'
 import ModalConfirm from '../partials/modals/ModalConfirm'
+import { Archive, ArchiveRestore, FilePenLine, Trash2 } from 'lucide-react'
 
 
 
@@ -73,7 +74,7 @@ const CategoryTable = () => {
                                     {true ? (
                                  <>
                                   
-                                    <li><button className='tooltip' data-tooltip="Edit" onClick={() => handleEdit()}><FilePenLine/></button></li>
+                                    <li><button className='tooltip' data-tooltip="Edit" onClick={() => handleEdit(item)}><FilePenLine/></button></li>
                                     <li><button className='tooltip' data-tooltip="Archive" onClick={()=>handleArchive()}><Archive /></button></li>
                                 </>) :(<>
                                     <li><button className='tooltip' data-tooltip="Restore" onClick={()=>handleRestore()}><ArchiveRestore /></button></li>

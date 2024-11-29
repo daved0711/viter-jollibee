@@ -31,7 +31,7 @@ const FoodsTable = ({setItemEdit}) => {
  
   const handleEdit = (item) => {
     dispatch(setIsAdd(true));
-  setItemEdit(item);
+    setItemEdit(item);
     }
   return (
     <>

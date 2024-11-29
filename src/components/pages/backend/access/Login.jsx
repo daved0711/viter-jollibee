@@ -2,6 +2,10 @@ import { imgPath } from '@/components/helpers/functions-general';
 import { ArrowLeft, Eye, EyeClosed, EyeOff } from 'lucide-react';
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { Form, Formik } from 'formik'
+import *as Yup from "Yup";
+import { InputText } from '@/components/helpers/FormInputs';
+
 
 const Login = () => {
     const [theme, setTheme] = React.useState(localStorage.getItem("theme"));
@@ -16,6 +20,16 @@ const Login = () => {
     
         setThemeColor();
       }, [theme]);
+
+      const initVal = {
+        user_email: "",
+        password: "",
+      };
+
+      const yupSchema = Yup.object({
+        user_email: Yup.string().required("Required").email("Invalid email"),
+        password: Yup.string().required("Required"),
+      });
     
     
   return (
@@ -24,25 +38,47 @@ const Login = () => {
 <img src={`${imgPath}/jollibee-logo.webp`} alt=""  className='w-[150px] mx-auto mb-2'/>
       <h5 className='text-center'>Welcome to Jollibee Kiosk</h5>
       
-      <form action="">
+      <Formik
+        initialValues={initVal}
+        validationSchema={yupSchema}
+        onSubmit={async (values) => {
+          console.log(values)
+        }}
+      >
+        {(props) => {
+          return (
+            <Form>
         <div className="input-wrap">
-           
-            <label htmlFor="">Username</label>
-            <input type="text" className='!py-2' />       
+            <InputText
+        label="Email"      
+        type="email"      
+        className="!py-2"      
+        name="user_email">
+          </InputText>      
         </div>
-        <div className="input-wrap">
-           
-            <label htmlFor="">Password</label>
-            <input type={showPassword ? "text" : "password"} className='!py-2' />    
+
+
+        <div className="input-wrap"> 
+            <InputText
+        label="Password"      
+        type={showPassword ? "text" : "password"}      
+        className="!py-2"      
+        name="password">
+          </InputText>    
+
             <button className='absolute bottom-2.5 right-1' onClick={() => setShowPassword(!showPassword)}
                 type='button'>
                 {showPassword ?    <Eye size={18}/> : <EyeOff size={18}/> }</button>
                   
         </div>
-        <Link to="/admin/ForgotPassword" className='text-xs italic hover:text-accent block text-right'>Forgot Password </Link>
+        <p className='text-right'> <Link to="/admin/ForgotPassword" className='text-xs italic hover:text-accent'>Forgot Password </Link></p>
+       
         <button className=' btn btn-accent w-full center-all mt-5'>Login</button>
         <Link to="/" className='text-sm text-center block mt-5 hover:text-accent flex items-center justify-center'><ArrowLeft/> Go back to Kiosk</Link>
-      </form>
+        </Form>
+          );
+        }}
+      </Formik>
       </div>
     </main>
   )
