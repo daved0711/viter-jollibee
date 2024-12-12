@@ -7,32 +7,53 @@ import { Archive, ArchiveRestore, FilePenLine, Trash2 } from 'lucide-react'
 import IconNoData from '../partials/IconNoData'
 import SpinnerTable from '../partials/spinners/SpinnerTable'
 import { StoreContext } from '@/components/Store/storeContext'
-import { setIsAdd, setIsConfirm, setIsDelete } from '@/components/Store/storeAction'
+import { setIsAdd, setIsArchive, setIsConfirm, setIsDelete, setIsRestore } from '@/components/Store/storeAction'
 import ModalDelete from '../partials/modals/ModalDelete'
 import ModalConfirm from '../partials/modals/ModalConfirm'
 import { menus } from '../menu-data'
+import useQueryData from '@/components/custom-hook/useQueryData'
+import Status from '@/components/partials/Status'
+import ModalArchive from '@/components/partials/modal/ModalArchive'
+import ModalRestore from '@/components/partials/modal/ModalRestore'
 
 
 
 const FoodsTable = ({setItemEdit}) => {
      const { dispatch, store} = React.useContext(StoreContext);
+     const [id, setIsId] = React.useState("");
     
    let counter = 1;
 
-  const handleDelete = () => {
-    dispatch(setIsDelete(true));
-    }
-  const handleRestore = () => {
-    dispatch(setIsConfirm(true));
-    }
-  const handleArchive = () => {
-    dispatch(setIsConfirm(true));
-    }
- 
-  const handleEdit = (item) => {
+   const handleEdit = (item) => {
     dispatch(setIsAdd(true));
     setItemEdit(item);
+  }
+    const handleDelete = (item) => {
+      dispatch(setIsDelete(true));
+      setIsId(item.food_aid);
     }
+    const handleArchive = (item) => {
+      dispatch(setIsArchive(true));
+      setIsId(item.food_aid);
+    }
+    
+    const handleRestore = (item) => {
+      dispatch(setIsRestore(true));
+      setIsId(item.food_aid);
+    }
+
+    const{
+      isFetching,
+      error,
+      data:result,
+      status,
+    } = useQueryData(
+      `/v2/food`, //endpoint
+      "get", //method
+      "food"// key
+    
+    );
+
   return (
     <>
     <div className='mt-10 bg-secondary rounded-md p-4 border border-line relative ' >
@@ -65,31 +86,40 @@ const FoodsTable = ({setItemEdit}) => {
                             </td>
                             
                         </tr> */}
-                  {menus.map ((item,key) =>(<tr  key={key}>
+                  {result?.count > 0 &&
+              result.data.map((item, key) => (
+                    <tr  key={key}>
                             <td>{counter++}.</td>
-                            <td><Pills/></td>
-                            <td>{item.menu_title}</td>
-                            <td>{item.menu_price}</td>
-                            <td>{item.menu_category}</td>
-                            
-                       
+                            <td>
+                    {item.food_is_active === 1 ? (
+                      <Status text="Active" />
+                    ) : (
+                      <Status text="Inactive" />
+                    )}
+                    </td>
+                            {/* <td title={`${item.food_image}`}>{item.food_image}</td> */}
+                            <td title={`${item.food_title}`}>{item.food_title}</td>
+                            <td title={`${item.food_price}`}>{item.food_price}</td>
+                            <td title={`${item.category_title}`}>{item.category_title}</td>
+                            {/* <td title={`${item.category_title}`}>{item.category_title}</td> */}
                             <td>
                                 <ul className='table-action  '>
-                                    {true ? (
+                                    {item.food_is_active ? (
                                  <>
-                                  
-                                    <li><button className='tooltip' data-tooltip="Edit" onClick={() => handleEdit(item)}><FilePenLine/></button></li>
-                                    <li><button className='tooltip' data-tooltip="Archive" onClick={()=>handleArchive()}><Archive /></button></li>
+                                    <li><button className='tooltip' type='button' data-tooltip="Edit" onClick={() => handleEdit(item)}><FilePenLine/></button></li>
+                                    <li><button className='tooltip' 
+                                    type='button' data-tooltip="Archive" onClick={()=>handleArchive(item)}><Archive /></button></li>
                                 </>) :(<>
-                                    <li><button className='tooltip' data-tooltip="Restore" onClick={()=>handleRestore()}><ArchiveRestore /></button></li>
-                                    <li><button className='tooltip' data-tooltip="Delete" onClick={()=>handleDelete()}><Trash2 /></button></li>
+                                    <li><button className='tooltip'
+                                    type='button' data-tooltip="Restore" onClick={()=>handleRestore(item)}><ArchiveRestore /></button></li>
+                                    <li><button className='tooltip' data-tooltip="Delete" onClick={()=>handleDelete(item)}><Trash2 /></button></li>
                                 </>)}
                                
                                     
                                 </ul>
                             </td>
                         </tr>
-                        ))}
+                          ))}
                         
                         
 
@@ -103,9 +133,12 @@ const FoodsTable = ({setItemEdit}) => {
                     </div>
                     </div> 
                   
-                    {store.isDelete && <ModalDelete/>}
-                     {store.isConfirm && <ModalConfirm/> }
-                     {store.isView && <ModalViewMovies movieInfo= {movieInfo}/> }
+                    {store.isDelete && <ModalDelete setIsDelete={setIsDelete} mysqlApiDelete={`/v2/food/${id}`}queryKey="food"/>}
+
+                    {store.isRestore && <ModalRestore setIsRestore={setIsRestore} mysqlEndpoint={`/v2/food/active/${id}`}queryKey="food"/>}
+
+                    {store.isArchive && <ModalArchive setIsArchive={setIsArchive} mysqlEndpoint={`/v2/food/active/${id}`} queryKey="food"/>}
+                
                     
                      </>
   )

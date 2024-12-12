@@ -1,3 +1,4 @@
+
 import React from "react";
 import { setError, setMessage } from "../store/storeAction.jsx";
 import { StoreContext } from "../store/storeContext.jsx";
@@ -22,11 +23,11 @@ const useUploadPhoto = (url) => {
     }
 
     const img = e.target.files[0];
-    if (img.size > 150000) {
+    if (img.size > 350000) {
       dispatch(setError(true));
       dispatch(
         setMessage(
-          "Photo is too big. It should be less than 5Kb and 80x80px size for better result or your dead."
+          "Photo is too big. It should be less than 5Kb and 80x80px size for better result."
         )
       );
     } else {

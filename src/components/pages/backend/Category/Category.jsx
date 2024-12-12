@@ -16,8 +16,11 @@ import ModalValidation from '../partials/modals/ModalValidation'
 
 
 const Category = () => {
+
+    const [isCategoryEdit, setIsCategoryEdit] = React.useState(null)
     const { dispatch, store} = React.useContext(StoreContext);
-    const handleAdd = () => {dispatch(setIsAdd(true));
+    const handleAdd = () => {dispatch(setIsAdd(true))
+      setIsCategoryEdit(null);
     }
   return (
     <>
@@ -33,7 +36,8 @@ const Category = () => {
                            <Plus size={16}/> Add New 
                         </button>
                     </div>  
-                    <CategoryTable/>
+                    <CategoryTable 
+                    setIsCategoryEdit={setIsCategoryEdit}/>
                 </div>
                 <Footer/>
             </main>
@@ -43,7 +47,10 @@ const Category = () => {
     {store.error && <ModalError/>}
      {store.success && <ToastSuccess/>}
     {/* {store.isView && <SpinnerWindow/>} */}
-    {store.isAdd && <ModalAddCategory/>}
+    {store.isAdd && 
+    <ModalAddCategory 
+      isCategoryEdit={isCategoryEdit} 
+      setIsCategoryEdit={setIsCategoryEdit}/>}
     </>
   )
 }
