@@ -108,7 +108,7 @@ const FoodsTable = ({setItemEdit}) => {
                                  <>
                                     <li><button className='tooltip' type='button' data-tooltip="Edit" onClick={() => handleEdit(item)}><FilePenLine/></button></li>
                                     <li><button className='tooltip' 
-                                    type='button' data-tooltip="Archive" onClick={()=>handleArchive(item)}><Archive /></button></li>
+                                    type='button' data-tooltip="Archive" onClick={() => handleArchive(item)}><Archive /></button></li>
                                 </>) :(<>
                                     <li><button className='tooltip'
                                     type='button' data-tooltip="Restore" onClick={()=>handleRestore(item)}><ArchiveRestore /></button></li>

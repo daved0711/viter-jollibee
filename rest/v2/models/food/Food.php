@@ -22,9 +22,11 @@ class Food
 
     public $connection;
     public $lastInsertedId;
+
     public $food_start;
     public $food_total;
     public $food_search;
+    
     public $category_start;
     public $category_total;
     public $category_search;
